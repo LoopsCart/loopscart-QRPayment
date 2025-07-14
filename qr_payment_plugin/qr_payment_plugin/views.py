@@ -39,7 +39,6 @@ class VendorQRDetailView(APIView):
 
 class QRPaymentLogAdminView(APIView):
     def post(self, request):
-        id = request.data.get("log_id")
         payment_id = request.data.get("payment_id")
         payment_status = QRPaymentLog.PaymentStatus(request.data.get("payment_status"))
 
@@ -47,7 +46,7 @@ class QRPaymentLogAdminView(APIView):
             return Response({"error": "Payment is already complete"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            instance = QRPaymentLog.objects.filter(id=id).latest("modified_date")
+            instance = QRPaymentLog.objects.filter(payment_id=payment_id).latest("modified_date")
             if instance:
                 instance.payment_status = payment_status
                 instance.save()
@@ -95,7 +94,7 @@ class QRPaymentStatusView(APIView):
     def get(self, request, pk):
         try:
             payment_id = int(pk)
-            instance = QRPaymentLog.objects.filter(payment_id=payment_id).order_by("-modified_date").first()
+            instance = QRPaymentLog.objects.filter(payment_id=payment_id).latest("modified_date")
             if instance:
                 data = QRPaymentLogSerializer(instance).data
                 data.pop("screenshot_data", None)
