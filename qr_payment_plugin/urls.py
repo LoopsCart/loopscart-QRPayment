@@ -12,7 +12,7 @@ from .views import (
 
 urlpatterns = [
     path("vendor/upload/", VendorQRUploadView.as_view(), name="vendor qr upload"),
-    path("vendor/qr/", VendorQRDetailView.as_view(), name="show qr"),
+    path("vendor/", VendorQRDetailView.as_view(), name="show qr"),
     path("payment-records/<int:pk>/", QRPaymentSSView.as_view(), name="qr payment record detail"),  # to see the individual payment record
     path("payment-record-list/", QRPaymentLogsDetailView.as_view(), name="qr payment record list"),  # to see the entire payment records
     path("receipt-upload/", QRPaymentLogCustomerView.as_view(), name="qr payment customer upload"),  # payment summary for customer

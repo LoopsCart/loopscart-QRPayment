@@ -33,7 +33,7 @@ class VendorQRDetailView(APIView):
             # qr = VendorQRCode.objects.get(pk=vendor_id)
             qr = VendorQRCode.objects.first()
             if qr:
-                return HttpResponse(qr.qr_code_data, content_type=qr.content_type)
+                return HttpResponse(qr.qr_code, content_type="image/jpeg")
             raise VendorQRCode.DoesNotExist
         except VendorQRCode.DoesNotExist:
             raise Http404("Not found")
@@ -69,8 +69,11 @@ class QRPaymentLogCustomerView(APIView):
             if isPaymentComplete(payment_id):
                 return Response({"success": False, "error": "Payment ID already complete"}, status=status.HTTP_400_BAD_REQUEST)
 
-            request.data["payment_status"] = QRPaymentLog.PaymentStatus.PENDING
-            serializer = QRPaymentLogSerializer(data=request.data)
+            mutable_request_data = request.data.copy()
+            mutable_request_data["payment_status"] = QRPaymentLog.PaymentStatus.PENDING
+            mutable_request_data["payment_id"] = payment_id
+
+            serializer = QRPaymentLogSerializer(data=mutable_request_data)
             if serializer.is_valid():
                 instance = serializer.save()
                 return Response({"success": True, "id": instance.payment_id}, status=status.HTTP_201_CREATED)
@@ -84,7 +87,7 @@ def isPaymentComplete(payment_id):
         payment_log = QRPaymentLog.objects.filter(payment_id=payment_id).latest("modified_date")
         if payment_log and (
             payment_log.payment_status == QRPaymentLog.PaymentStatus.ACCEPTED
-            or payment_log.payment_status == QRPaymentLog.PaymentStatus.REJECTED
+            or payment_log.payment_status == QRPaymentLog.PaymentStatus.ABANDONED
         ):
             return True
         return False
@@ -133,6 +136,6 @@ class QRPaymentSSView(APIView):
         try:
             instance = QRPaymentLog.objects.get(id=id)
             if instance:
-                return HttpResponse(instance.screenshot_data, content_type=instance.screenshot_file_type)
+                return HttpResponse(instance.screenshot_file, content_type="image/jpeg")
         except Exception:
             raise Http404("Not found")

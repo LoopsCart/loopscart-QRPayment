@@ -12,8 +12,4 @@ qr_payment_plugin.egg-info/dependency_links.txt
 qr_payment_plugin.egg-info/requires.txt
 qr_payment_plugin.egg-info/top_level.txt
 qr_payment_plugin/migrations/0001_initial.py
-qr_payment_plugin/migrations/0002_remove_vendorqr_id_alter_vendorqr_vendor_id.py
-qr_payment_plugin/migrations/0003_orderpaymentqr_delete_vendorqr.py
-qr_payment_plugin/migrations/0004_qrpaymentlog_vendorqrcode_delete_orderpaymentqr.py
-qr_payment_plugin/migrations/0005_remove_qrpaymentlog_payment_date_and_more.py
 qr_payment_plugin/migrations/__init__.py
