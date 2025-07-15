@@ -6,6 +6,8 @@ from rest_framework.views import APIView
 from .models import QRPaymentLog, VendorQRCode
 from .serializers import QRPaymentLogSerializer, VendorQRCodeSerializer
 
+# payment_id == order_id
+
 
 class VendorQRUploadView(APIView):
     def post(self, request):
@@ -39,7 +41,7 @@ class VendorQRDetailView(APIView):
 
 class QRPaymentLogAdminView(APIView):
     def post(self, request):
-        payment_id = request.data.get("payment_id")
+        payment_id = request.data.get("order_id")
         payment_status = QRPaymentLog.PaymentStatus(request.data.get("payment_status"))
 
         if isPaymentComplete(payment_id):
@@ -51,7 +53,7 @@ class QRPaymentLogAdminView(APIView):
                 instance.payment_status = payment_status
                 instance.save()
                 return Response(
-                    {"success": True, "payment_id": instance.payment_id, "payment_stats": instance.payment_status},
+                    {"success": True, "order_id": instance.payment_id, "payment_stats": instance.payment_status},
                     status=status.HTTP_200_OK,
                 )
             else:
@@ -63,7 +65,7 @@ class QRPaymentLogAdminView(APIView):
 class QRPaymentLogCustomerView(APIView):
     def post(self, request):
         try:
-            payment_id = request.data.get("payment_id")
+            payment_id = request.data.get("order_id")
             if isPaymentComplete(payment_id):
                 return Response({"success": False, "error": "Payment ID already complete"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -102,18 +104,18 @@ class QRPaymentStatusView(APIView):
             else:
                 return Response({"error": "Not found"})
         except ValueError:
-            return Response({"error": "Invalid payment_id"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid Order id"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class QRPaymentLogsDetailView(APIView):
     def post(self, request, format=None):
-        payment_id = request.data.get("payment_id")
+        payment_id = request.data.get("order_id")
         try:
             logs = QRPaymentLog.objects.filter(payment_id=payment_id).order_by("-modified_date")
             response = [
                 {
                     "id": log.id,
-                    "payment_id": log.payment_id,
+                    "order_id": log.payment_id,
                     "payment_status": log.payment_status,
                     "created_date": log.created_date,
                     "modified_date": log.modified_date,
