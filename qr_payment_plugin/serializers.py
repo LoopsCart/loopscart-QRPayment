@@ -28,7 +28,6 @@ class VendorQRCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = VendorQRCode
         fields = ("qr_code", "name", "description")
-        read_only_fields = ["qr_code"]
 
     def create(self, validated_data):
         # If a QR code already exists, update it. Otherwise, create a new one.
