@@ -23,7 +23,7 @@ class QRPaymentLogSerializer(serializers.ModelSerializer):
 
 
 class VendorQRCodeSerializer(serializers.ModelSerializer):
-    qr_code = serializers.ImageField(write_only=True)
+    qr_code = serializers.ImageField(use_url=True)
 
     class Meta:
         model = VendorQRCode

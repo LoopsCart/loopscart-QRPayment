@@ -28,12 +28,12 @@ class VendorQRUploadView(APIView):
 
 class VendorQRDetailView(APIView):
     def post(self, request, format=None):
-        # vendor_id = request.data.get("vendor_id")
         try:
-            # qr = VendorQRCode.objects.get(pk=vendor_id)
             qr = VendorQRCode.objects.first()
             if qr:
-                return HttpResponse(qr.qr_code, content_type="image/jpeg")
+                serializer = VendorQRCodeSerializer(qr)
+                return Response(serializer.data)
+                # return HttpResponse(qr.qr_code, content_type="image/jpeg")
             raise VendorQRCode.DoesNotExist
         except VendorQRCode.DoesNotExist:
             raise Http404("Not found")
