@@ -115,17 +115,8 @@ class QRPaymentLogsDetailView(APIView):
         payment_id = request.data.get("order_id")
         try:
             logs = QRPaymentLog.objects.filter(payment_id=payment_id).order_by("-modified_date")
-            response = [
-                {
-                    "id": log.id,
-                    "order_id": log.payment_id,
-                    "payment_status": log.payment_status,
-                    "created_date": log.created_date,
-                    "modified_date": log.modified_date,
-                }
-                for log in logs
-            ]
-            return Response(response)
+            serializer = QRPaymentLogSerializer(logs, many=True)
+            return Response(serializer.data)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

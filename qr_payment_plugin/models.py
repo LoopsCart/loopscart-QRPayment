@@ -31,6 +31,7 @@ class QRPaymentLog(models.Model):
     payment_id = models.BigIntegerField()
     payment_status = models.CharField(max_length=20, choices=PaymentStatus.choices)
     screenshot_file = models.ImageField(upload_to="screenshot/", validators=[validate_file_size])
+    remarks = models.TextField(blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 

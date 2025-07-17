@@ -4,7 +4,7 @@ from .models import QRPaymentLog, VendorQRCode
 
 
 class QRPaymentLogSerializer(serializers.ModelSerializer):
-    screenshot_file = serializers.ImageField(write_only=True)
+    screenshot_file = serializers.ImageField(use_url=True)
 
     class Meta:
         model = QRPaymentLog
