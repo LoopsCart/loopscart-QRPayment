@@ -93,7 +93,7 @@ def isPaymentComplete(order_id):
 
 
 class QRPaymentStatusView(APIView):
-    def get(self, request, pk):
+    def post(self, request, pk):
         try:
             order_id = int(pk)
             instance = QRPaymentLog.objects.filter(order_id=order_id).latest("modified_date")
