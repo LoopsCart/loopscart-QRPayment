@@ -39,7 +39,7 @@ class VendorQRDetailView(APIView):
 class QRPaymentLogAdminView(APIView):
     def post(self, request):
         order_id = request.data.get("order_id")
-        payment_status = QRPaymentLog.PaymentStatus(request.data.get("payment_status"))
+        payment_status = QRPaymentLog.PaymentStatus(request.data.get("status"))
 
         if isPaymentComplete(order_id):
             return Response({"error": "Payment is already complete"}, status=status.HTTP_400_BAD_REQUEST)
