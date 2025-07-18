@@ -41,8 +41,9 @@ class QRPaymentLogAdminView(APIView):
         order_id = request.data.get("order_id")
         payment_status = QRPaymentLog.PaymentStatus(request.data.get("status"))
 
-        if isPaymentComplete(order_id):
-            return Response({"error": "Payment is already complete"}, status=status.HTTP_400_BAD_REQUEST)
+        # Admin can do whatever they want with the payment status (Jul 18 2025)
+        # if isPaymentComplete(order_id):
+        #     return Response({"error": "Payment is already complete"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             instance = QRPaymentLog.objects.filter(order_id=order_id).latest("modified_date")
