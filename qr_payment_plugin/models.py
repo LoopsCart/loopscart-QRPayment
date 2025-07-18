@@ -14,7 +14,7 @@ def validate_file_size(value):
 class VendorQRCode(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    qr_code = models.ImageField(upload_to="qr_code/", validators=[validate_file_size])
+    qr_code_file = models.ImageField(upload_to="qr_code/", validators=[validate_file_size])
 
     def __str__(self):
         return f"{self.name} QR Code"
@@ -28,7 +28,7 @@ class QRPaymentLog(models.Model):
         ABANDONED = "ABANDONED"  # meaning the transaction itself is cancled
 
     id = models.BigAutoField(primary_key=True)
-    payment_id = models.BigIntegerField()
+    order_id = models.BigIntegerField()
     payment_status = models.CharField(max_length=20, choices=PaymentStatus.choices)
     screenshot_file = models.ImageField(upload_to="screenshot/", validators=[validate_file_size])
     remarks = models.TextField(blank=True, null=True)
@@ -36,4 +36,4 @@ class QRPaymentLog(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Payment Log for payment ID #{self.payment_id}"
+        return f"Payment Log for payment ID #{self.order_id}"

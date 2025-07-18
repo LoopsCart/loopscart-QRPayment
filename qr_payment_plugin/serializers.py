@@ -10,7 +10,7 @@ class QRPaymentLogSerializer(serializers.ModelSerializer):
         model = QRPaymentLog
         fields = [
             "id",
-            "payment_id",
+            "order_id",
             "payment_status",
             "modified_date",
             "created_date",
@@ -23,11 +23,11 @@ class QRPaymentLogSerializer(serializers.ModelSerializer):
 
 
 class VendorQRCodeSerializer(serializers.ModelSerializer):
-    qr_code = serializers.ImageField(use_url=True)
+    qr_code_file = serializers.ImageField(use_url=True)
 
     class Meta:
         model = VendorQRCode
-        fields = ("qr_code", "name", "description")
+        fields = ("qr_code_file", "name", "description")
 
     def create(self, validated_data):
         # If a QR code already exists, update it. Otherwise, create a new one.
