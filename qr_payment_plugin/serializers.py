@@ -11,6 +11,7 @@ class QRPaymentLogSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "order_id",
+            "remarks",
             "payment_status",
             "modified_date",
             "created_date",
